@@ -1,0 +1,9 @@
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\bin\Debug\netcoreapp1.1\ServicesAndDI.deps.json
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\bin\Debug\netcoreapp1.1\ServicesAndDI.runtimeconfig.json
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\bin\Debug\netcoreapp1.1\ServicesAndDI.runtimeconfig.dev.json
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\bin\Debug\netcoreapp1.1\ServicesAndDI.dll
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\bin\Debug\netcoreapp1.1\ServicesAndDI.pdb
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\obj\Debug\netcoreapp1.1\ServicesAndDI.csprojResolveAssemblyReference.cache
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\obj\Debug\netcoreapp1.1\ServicesAndDI.AssemblyInfo.cs
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\obj\Debug\netcoreapp1.1\ServicesAndDI.dll
+C:\Users\nanop\Documents\Visual Studio 2017\Projects\ServicesAndDI\obj\Debug\netcoreapp1.1\ServicesAndDI.pdb
