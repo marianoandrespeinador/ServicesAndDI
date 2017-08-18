@@ -6,7 +6,9 @@ import { AccountsService } from '../../accounts.service';
   selector: 'app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ AccountsService ]
+  //Con la siguiente línea, se instanciaria el servicio "AccountsService" para que todos los componentes hijos reciban la misma instancia.
+  //providers: [ AccountsService ]
+  //SIN EMBARGO, está instanciado en app.module para asegurarnos de que toda la aplicación reciba la misma instancia.
 })
 export class AppComponent implements OnInit {
     accounts: {name:string, status:string}[] = [];

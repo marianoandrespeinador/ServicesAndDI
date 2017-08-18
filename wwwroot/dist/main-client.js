@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "126421fd7478c327d9f5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2db65b860a6a94ccd43c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -731,10 +731,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(1);
+var logging_service_1 = __webpack_require__(4);
+//Injectable se usa para poderle inyectar otros servicios (ie LoggingService) a este:
 var AccountsService = (function () {
-    function AccountsService() {
+    function AccountsService(loggingService) {
+        this.loggingService = loggingService;
         this.accounts = [
             {
                 name: 'Master Account',
@@ -752,14 +758,17 @@ var AccountsService = (function () {
     }
     AccountsService.prototype.addAccount = function (name, status) {
         this.accounts.push({ name: name, status: status });
+        this.loggingService.logStatusChange(status);
     };
     AccountsService.prototype.updateStatus = function (id, status) {
         this.accounts[id].status = status;
+        this.loggingService.logStatusChange(status);
     };
     return AccountsService;
 }());
 AccountsService = __decorate([
-    core_1.Injectable()
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [logging_service_1.LoggingService])
 ], AccountsService);
 exports.AccountsService = AccountsService;
 
@@ -852,25 +861,18 @@ function toComment(sourceMap) {
 
 "use strict";
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
+//No se usa Injectable, porque no vamos a inyectarle ningun servicio a LoggingService
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__(1);
+//import { Injectable } from '@angular/core';
+//@Injectable()
 var LoggingService = (function () {
     function LoggingService() {
     }
-    LoggingService.prototype.logStatusChance = function (status) {
+    LoggingService.prototype.logStatusChange = function (status) {
         console.log('A server status changed, new status: ' + status);
     };
     return LoggingService;
 }());
-LoggingService = __decorate([
-    core_1.Injectable()
-], LoggingService);
 exports.LoggingService = LoggingService;
 
 
@@ -1612,7 +1614,8 @@ AppModule = __decorate([
             http_1.HttpModule
         ].concat(app_module_shared_1.sharedConfig.imports),
         providers: [
-            { provide: 'ORIGIN_URL', useValue: location.origin }
+            { provide: 'ORIGIN_URL', useValue: location.origin },
+            app_module_shared_1.sharedConfig.providers
         ]
     })
 ], AppModule);
@@ -1632,6 +1635,8 @@ var http_1 = __webpack_require__(7);
 var app_component_1 = __webpack_require__(17);
 var account_component_1 = __webpack_require__(16);
 var new_account_component_1 = __webpack_require__(18);
+var accounts_service_1 = __webpack_require__(2);
+var logging_service_1 = __webpack_require__(4);
 exports.sharedConfig = {
     bootstrap: [app_component_1.AppComponent],
     declarations: [
@@ -1643,6 +1648,10 @@ exports.sharedConfig = {
         platform_browser_1.BrowserModule,
         forms_1.FormsModule,
         http_1.HttpModule
+    ],
+    providers: [
+        accounts_service_1.AccountsService,
+        logging_service_1.LoggingService
     ]
 };
 
@@ -1664,16 +1673,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(1);
-var logging_service_1 = __webpack_require__(4);
 var accounts_service_1 = __webpack_require__(2);
 var AccountComponent = (function () {
-    function AccountComponent(loggingService, accountsService) {
-        this.loggingService = loggingService;
+    function AccountComponent(accountsService) {
         this.accountsService = accountsService;
     }
     AccountComponent.prototype.onSetTo = function (status) {
         this.accountsService.updateStatus(this.id, status);
-        this.loggingService.logStatusChance(status);
     };
     return AccountComponent;
 }());
@@ -1690,11 +1696,8 @@ AccountComponent = __decorate([
         selector: 'app-account',
         template: __webpack_require__(25),
         styles: [__webpack_require__(33)],
-        //No se provee el AccountsService aca porque no queremos otra instancia, queremos la misma instancia que viene heredada
-        providers: [logging_service_1.LoggingService]
     }),
-    __metadata("design:paramtypes", [logging_service_1.LoggingService,
-        accounts_service_1.AccountsService])
+    __metadata("design:paramtypes", [accounts_service_1.AccountsService])
 ], AccountComponent);
 exports.AccountComponent = AccountComponent;
 
@@ -1732,7 +1735,6 @@ AppComponent = __decorate([
         selector: 'app',
         template: __webpack_require__(26),
         styles: [__webpack_require__(34)],
-        providers: [accounts_service_1.AccountsService]
     }),
     __metadata("design:paramtypes", [accounts_service_1.AccountsService])
 ], AppComponent);
@@ -1756,16 +1758,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(1);
-var logging_service_1 = __webpack_require__(4);
 var accounts_service_1 = __webpack_require__(2);
 var NewAccountComponent = (function () {
-    function NewAccountComponent(loggingService, accountsService) {
-        this.loggingService = loggingService;
+    function NewAccountComponent(accountsService) {
         this.accountsService = accountsService;
     }
     NewAccountComponent.prototype.onCreateAccount = function (accountName, accountStatus) {
         this.accountsService.addAccount(accountName, accountStatus);
-        this.loggingService.logStatusChance(accountStatus);
     };
     return NewAccountComponent;
 }());
@@ -1774,10 +1773,8 @@ NewAccountComponent = __decorate([
         selector: 'app-new-account',
         template: __webpack_require__(27),
         styles: [__webpack_require__(35)],
-        //No se provee el AccountsService aca porque no queremos otra instancia, queremos la misma instancia que viene heredada
-        providers: [logging_service_1.LoggingService]
     }),
-    __metadata("design:paramtypes", [logging_service_1.LoggingService, accounts_service_1.AccountsService])
+    __metadata("design:paramtypes", [accounts_service_1.AccountsService])
 ], NewAccountComponent);
 exports.NewAccountComponent = NewAccountComponent;
 

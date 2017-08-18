@@ -1,9 +1,11 @@
 ﻿
-import { Injectable } from '@angular/core';
+//No se usa Injectable, porque no vamos a inyectarle ningun servicio a LoggingService
 
-@Injectable()
+//import { Injectable } from '@angular/core';
+//@Injectable()
+
 export class LoggingService {
-    logStatusChance(status: string) {
+    logStatusChange(status: string) {
         console.log('A server status changed, new status: ' + status);
     }
 }
